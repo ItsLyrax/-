@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Распознай манипуляцию | Твоя безопасность</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #f472b6;
+            --bg-gradient: linear-gradient(145deg, #0f172a 0%, #1e1b4b 100%);
+            --glass: rgba(255, 255, 255, 0.07);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-white: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 35px 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #818cf8, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-dim);
+            margin-bottom: 30px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Кнопки */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            border-radius: 16px;
+            border: none;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .btn-main {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-main:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-white);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Тест */
+        .progress-wrap { margin-bottom: 25px; }
+        .progress-info { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 8px; }
+        .bar-bg { height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        .bar-fill { height: 100%; background: var(--accent); width: 0%; border-radius: 10px; transition: width 0.4s ease; }
+
+        .question-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; line-height: 1.4; }
+        .option-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .option-card:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--primary); }
+
+        /* Советы */
+        .tips-scroll { max-height: 400px; overflow-y: auto; padding-right: 5px; margin-bottom: 20px; }
+        .tips-scroll::-webkit-scrollbar { width: 4px; }
+        .tips-scroll::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+
+        .tip-box {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent);
+        }
+        .tip-box h4 { margin-bottom: 8px; color: var(--accent); }
+        .tip-box p { font-size: 0.95rem; color: #cbd5e1; text-align: left; margin: 0; }
+
+        /* Ошибки */
+        .error-log { margin-top: 25px; border-top: 1px solid var(--glass-border); padding-top: 20px; }
+        .error-card { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 12px; padding: 15px; margin-bottom: 10px; font-size: 0.9rem; }
+
+        @media (max-width: 480px) {
+            .container { padding: 30px 20px; border-radius: 20px; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- Главная -->
+    <div id="home">
+        <h1>Распознай манипуляцию</h1>
+        <p class="subtitle">Узнай, насколько хорошо ты видишь скрытые ловушки в интернете. Без шуток и смеха, только реальные ситуации.</p>
+        <button class="btn btn-main" onclick="nav('quiz'); initQuiz();">Проверить себя</button>
+        <button class="btn btn-ghost" onclick="nav('tips')">Как нас обманывают (советы)</button>
+    </div>
+
+    <!-- Тест -->
+    <div id="quiz" class="hidden">
+        <div class="progress-wrap">
+            <div class="progress-info"><span id="q-num">Вопрос 1/10</span><span id="q-perc">0%</span></div>
+            <div class="bar-bg"><div class="bar-fill" id="bar"></div></div>
+        </div>
+        <div class="question-title" id="q-txt">...</div>
+        <div id="options-box"></div>
+    </div>
+
+    <!-- Результат -->
+    <div id="results" class="hidden">
+        <h1>Твой итог</h1>
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div id="res-score" style="font-size: 3.5rem; font-weight: 800;">0/10</div>
+            <p id="res-status" style="color: var(--accent); font-weight: 600;"></p>
+        </div>
+        <button class="btn btn-main" onclick="nav('tips')">Узнать, как не попасть в ловушки</button>
+        <div id="mistakes-area" class="error-log hidden">
+            <h3 style="margin-bottom: 15px; font-size: 1.1rem;">Разбор промахов:</h3>
+            <div id="mistakes-list"></div>
+        </div>
+        <button class="btn btn-ghost" onclick="nav('home')">На главную</button>
+    </div>
+
+    <!-- Советы -->
+    <div id="tips" class="hidden">
+        <h1>Важные факты</h1>
+        <div class="tips-scroll">
+            <div class="tip-box">
+                <h4>🛑 Ловушка «Легкие деньги»</h4>
+                <p>Предложения стать «курьером» или «доставщиком» с оплатой 50-100к в неделю — это вербовка в наркоторговлю. Организаторы обещают безопасность, но на деле «сотрудник» попадается полиции в среднем через 2 месяца. Сроки за это — от 10 лет, и никакая «молодость» не помогает их сократить.</p>
+            </div>
+            <div class="tip-box">
+                <h4>📸 Скрытая реклама у блогеров</h4>
+                <p>Когда кумир молодежи на видео просто держит в руках вейп или упоминает «волшебные таблетки» для энергии — это проплаченный контракт. Им платят за то, чтобы ты думал, что наркотики — это часть крутого стиля жизни, а не болезнь и деградация.</p>
+            </div>
+            <div class="tip-box">
+                <h4>💬 Шифры и эмодзи</h4>
+                <p>В комментариях часто используют смайлики грибов, листьев, кристаллов или слова вроде «мед», «ск». Это способ обойти фильтры соцсетей. Не переходи по ссылкам рядом с такими знаками — это прямые выходы на магазины запрещенных веществ.</p>
+            </div>
+            <div class="tip-box">
+                <h4>🧪 Миф про «натуральность»</h4>
+                <p>Дилеры часто говорят, что их товар — «просто травы» или «природный продукт». Это ложь. Современные вещества — это мощнейшая химия, которая ломает мозг и психику с первого-второго раза. «Природное» не значит «безопасное».</p>
+            </div>
+            <div class="tip-box">
+                <h4>🤝 Психология доверия</h4>
+                <p>Вербовщики общаются вежливо, называют «бро», используют мемы и молодежный сленг. Их цель — стать твоим «другом», чтобы ты потерял бдительность. Помни: реальный друг никогда не предложит тебе то, что может разрушить твою жизнь.</p>
+            </div>
+        </div>
+        <button class="btn btn-main" onclick="nav('quiz'); initQuiz();">Пройти тест</button>
+        <button class="btn btn-ghost" onclick="nav('home')">Назад</button>
+    </div>
+
+</div>
+
+<script>
+    const data = [
+        { q: "В Telegram предлагают работу: 'Нужно просто доставлять посылки, 10 000р за одну поездку'. Что это?", options: [{t:"Шанс быстро заработать на мечту", c:false, e:"Никто не платит такие деньги за обычную курьерскую работу. Это 100% вербовка в 'закладчики'."}, {t:"Опасная ловушка с реальным тюремным сроком", c:true}] },
+        { q: "Блогер рассказывает, что 'некоторые вещества' помогают ему не спать и готовиться к экзаменам. Верить?", options: [{t:"Да, если он сам это пробовал", c:false, e:"Это опасная пропаганда. Вещества не дают энергию, а берут её в кредит у твоего организма, убивая нервную систему."}, {t:"Нет, это путь к зависимости и больнице", c:true}] },
+        { q: "Тебе прислали ссылку на 'секретный чат', где все делятся способами расслабиться. Твои действия?", options: [{t:"Зайду посмотрю, я же просто зритель", c:false, e:"Вход в такие сообщества — первый шаг к вовлечению. Алгоритмы и люди там быстро 'обработают' новичка."}, {t:"Заблокирую отправителя", c:true}] },
+        { q: "Почему наркоторговцы используют мемы и сленг в своей рекламе?", options: [{t:"Чтобы казаться своими и вызвать доверие", c:true}, {t:"Просто они тоже любят мемы", c:false, e:"Это холодный расчет. Они хотят, чтобы ты перестал воспринимать наркотики как смертельную опасность."}] },
+        { q: "Знакомый говорит: 'От одного раза ничего не будет, я сто раз так делал'. Что ответишь?", options: [{t:"Ну раз ты так говоришь, то ладно", c:false, e:"Каждый организм уникален. Кому-то 'везет', а кто-то уезжает на скорой после первой же пробы. Это лотерея, где на кону жизнь."}, {t:"Твой опыт — не гарантия моей безопасности", c:true}] },
+        { q: "Ты видишь в подъезде странные надписи краской с адресом сайта. Что это скорее всего?", options: [{t:"Реклама запрещенного интернет-магазина", c:true}, {t:"Просто современное искусство", c:false, e:"Это прямая реклама наркошопов. Не переходи по адресу — сайты могут содержать вирусы и опасный контент."}] },
+        { q: "В соцсетях активно продвигают тему, что 'травка' — это лекарство и это натурально. Это правда?", options: [{t:"Да, это же не химия", c:false, e:"Любые психоактивные вещества меняют сознание. То, что продают на улицах под видом 'натурального', часто пропитано опаснейшей синтетикой."}, {t:"Нет, это способ снизить страх перед наркотиками", c:true}] },
+        { q: "Если тебе навязчиво предлагают попробовать что-то 'бесплатно' на вечеринке, это...", options: [{t:"Просто дружеский жест", c:false, e:"Бесплатных доз не бывает. Это расчет на то, что ты подсядешь и принесешь им деньги позже."}, {t:"Способ сделать тебя постоянным клиентом", c:true}] },
+        { q: "Что делать, если ты случайно увидел в телефоне друга переписку о покупке наркотиков?", options: [{t:"Ничего, это его личное дело", c:false, e:"Настоящий друг не будет смотреть, как близкий человек падает в пропасть. Нужно постараться помочь через взрослых."}, {t:"Попробовать поговорить с ним о рисках", c:true}] },
+        { q: "Правда ли, что наркокурьеры ('кладчики') — это верхушка бизнеса и они защищены?", options: [{t:"Да, у них есть свои юристы", c:false, e:"Курьер для организаторов — это 'расходный материал'. Их не защищают, а просто заменяют новыми, когда тех ловят."}, {t:"Нет, это самые уязвимые люди, которых первыми ловит полиция", c:true}] }
+    ];
+
+    let curr = 0, score = 0, mistakes = [];
+
+    function nav(id) {
+        document.querySelectorAll('.container > div').forEach(d => d.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    function initQuiz() {
+        curr = 0; score = 0; mistakes = [];
+        updateQ();
+    }
+
+    function updateQ() {
+        const q = data[curr];
+        document.getElementById('q-num').innerText = `Вопрос ${curr + 1}/${data.length}`;
+        document.getElementById('q-perc').innerText = Math.round((curr / data.length) * 100) + '%';
+        document.getElementById('bar').style.width = (curr / data.length * 100) + '%';
+        document.getElementById('q-txt').innerText = q.q;
+
+        const box = document.getElementById('options-box');
+        box.innerHTML = '';
+        q.options.forEach(o => {
+            const d = document.createElement('div');
+            d.className = 'option-card';
+            d.innerText = o.t;
+            d.onclick = () => {
+                if(o.c) score++;
+                else mistakes.push({ q: q.q, e: o.e });
+                curr++;
+                if(curr < data.length) updateQ(); else showFinal();
+            };
+            box.appendChild(d);
+        });
+    }
+
+    function showFinal() {
+        nav('results');
+        document.getElementById('res-score').innerText = `${score}/${data.length}`;
+        const st = document.getElementById('res-status');
+        const area = document.getElementById('mistakes-area');
+        
+        if(score === 10) {
+            st.innerText = "Ты — кремень! Тебя не обмануть.";
+            area.classList.add('hidden');
+        } else {
+            st.innerText = score > 6 ? "Неплохо, но есть слабые места." : "Будь осторожнее, ты в зоне риска!";
+            const list = document.getElementById('mistakes-list');
+            list.innerHTML = '';
+            mistakes.forEach(m => {
+                list.innerHTML += `<div class="error-card"><strong>Вопрос:</strong> ${m.q}<br><span style="color:#fb7185">Разбор: ${m.e}</span></div>`;
+            });
+            area.classList.remove('hidden');
+        }
+    }
+</script>
+
+</body>
+</html>
